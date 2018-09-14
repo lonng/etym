@@ -26,10 +26,9 @@ sh build/unpack.sh
 
 ### 小程序截图
 
-![screenshot](./screenshot/ex.jpg)
-![screenshot](./screenshot/geo.jpg)
+<img src="./screenshot/geo.jpg" width="300"/>
+<img src="./screenshot/ex.jpg" width="300"/>
 
 ### 支持作者
 
-![screenshot](./screenshot/r.jpg)
-
+<img src="./screenshot/r.jpg" width="300"/>
