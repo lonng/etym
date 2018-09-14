@@ -1,0 +1,349 @@
+/* pages/index/rand.index.js.wxss */
+.etym-search-container {
+  width: 100%;
+  background: #ffaf2d;
+  position: fixed;
+  left: 0rpx;
+  right: 0rpx;
+  top: 0rpx;
+  z-index: 999;
+}
+
+.etym-search-bar {
+  width: 100%;
+  height: 100rpx;
+  background: #ffaf2d;
+  position: fixed;
+  left: 0rpx;
+  right: 0rpx;
+  top: 0rpx;
+}
+
+.search-input {
+  font-size: 30rpx;
+}
+
+.etym-search-history {
+  width: 100%;
+  background: #f7f7f7;
+  position: fixed;
+  left: 0rpx;
+  right: 0rpx;
+  top: 100rpx;
+  color: #444;
+  box-shadow: 0px 4px 8px 0 rgba(88, 88, 88, 0.2);
+  border-bottom-right-radius: 15rpx;
+  border-bottom-left-radius: 15rpx;
+}
+
+.etym-search-container input {
+  background: #fff;
+  position: absolute;
+  padding: 7rpx 110rpx 7rpx 30rpx;
+  top: 20rpx;
+  left: 20rpx;
+  right: 20rpx;
+  height: 50rpx;
+  border-radius: 30rpx;
+}
+
+.search-icon {
+  position: absolute;
+  top: 0rpx;
+  bottom: 0rpx;
+  margin: auto;
+  right: 5rpx;
+  line-height: 50rpx;
+  padding: 7rpx 25rpx;
+  height: 50rpx;
+}
+
+.search-icon icon {
+  margin: auto;
+  height: 40rpx;
+}
+
+.etym-search-container button icon {
+  position: absolute;
+  left: 35%;
+  top: 12rpx;
+}
+
+.etym-search-item {
+  font-size: 30rpx;
+  line-height: 45rpx;
+  margin: 10rpx 30rpx;
+  max-height: 45rpx;
+  overflow: hidden;
+}
+
+.etym-search-item-word {
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+
+.etym-search-item-translation {
+  font-size: 25rpx;
+  line-height: 30rpx;
+}
+
+.etym-card-container {
+  position: absolute;
+  top: 100rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: scroll;
+  background: #fcfcfc;
+}
+
+.etym-card-header {
+  background: #efefef;
+  padding: 30rpx 40rpx;
+  box-shadow: 0px 2px 6px 0 rgba(88, 88, 88, 0.2);
+}
+
+.etym-info {
+  padding: 10rpx 40rpx;
+}
+
+.etym-info-header {
+  margin: 40rpx 0 30rpx;
+}
+
+.etym-info-header label {
+    line-height: 50rpx;
+    vertical-align: middle;
+}
+
+.etym-info-content {
+    font-size: 30rpx;
+}
+
+.etym-info-content label {
+    vertical-align: middle;
+    line-height: 40rpx;
+}
+
+.etym-switch-lang {
+  background: #ffaf2d;
+  color: #fff;
+  font-size: 25rpx;
+  padding: 5rpx 10rpx;
+  margin-right: 10rpx;
+}
+
+.etym-info-impove {
+    background: #ffaf2d;
+    color: #fff;
+    font-size: 25rpx;
+    padding: 5rpx 10rpx;
+    margin-right: 10rpx;
+}
+
+.etym-title-font {
+  font-family: Helvetica;
+}
+
+.etym-title {
+  font-size: 80rpx;
+}
+
+.etym-phonetic {
+  margin-top: 20rpx;
+  font-size: 40rpx;
+  line-height: 40rpx;
+  font-family: "Times New Roman";
+}
+
+.etym-phonetic-audio {
+    line-height: 40rpx;
+    width: 28rpx;
+    height: 28rpx;
+    margin-right: 30rpx;
+    margin-left: 12rpx;
+}
+
+.etym-title2 {
+  font-size: 45rpx;
+  font-weight: bold;
+}
+
+.etym-content {
+  font-size: 30rpx;
+}
+
+.etym-related {
+  margin: 20rpx 25rpx 25rpx;
+}
+
+.etym-foreign {
+  border-radius: 10rpx;
+  font-size: 34rpx;
+  box-shadow: 0px -2rpx 10rpx 0 rgba(88, 88, 88, 0.1), 0px 2rpx 10rpx 0 rgba(88, 88, 88, 0.2);
+  overflow: hidden;
+}
+
+.etym-ref {
+  /* border: 1rpx solid #efefef; */
+  border-radius: 10rpx;
+  font-size: 34rpx;
+  box-shadow: 0px 2rpx 10rpx 0 rgba(88, 88, 88, 0.2);
+  overflow: hidden;
+}
+
+.etym-ref-title {
+  padding: 15rpx;
+  padding-bottom: 20rpx;
+  /* border-bottom: 1rpx solid #efefef; */
+  background: #ffaf2d;
+  color: #fff;
+}
+
+.etym-ref-title text {
+  font-size: 30rpx;
+  line-height: 40rpx;
+}
+
+.etym-ref-title-word {
+  font-size: 45rpx;
+  font-weight: bold;
+}
+
+.etym-ref-title-phonetic {
+  margin-left: 30rpx;
+  font-family: "Times New Roman";
+}
+
+.etym-related-grey {
+  background: #f4f4f4;
+}
+
+.etym-related-white {
+  background: #fcfcfc;
+}
+
+.etym-related-word {
+  font-size: 30rpx;
+   /* text-decoration: underline;  */
+   font-weight: bold;
+}
+
+.etym-related-phonetic {
+  margin-left: 30rpx;
+  font-size: 30rpx;
+  font-family: "Times New Roman";
+}
+
+.etym-related-translation {
+  margin-top: 10rpx;
+  line-height: 40rpx;
+  font-size: 30rpx;
+}
+
+.etym-related-counter {
+  line-height: 30rpx;
+  font-size: 25rpx;
+  font-weight: bold;
+}
+
+.etym-related-container {
+  padding: 20rpx;
+}
+
+.refresh {
+  position: absolute;
+  right: 30rpx;
+  bottom: 50rpx;
+}
+
+.refresh-button {
+  position: absolute;
+  background: #ffaf2d;
+  color: #fff;
+  width: 50rpx;
+  height: 50rpx;
+  text-align: center;
+  line-height: 50rpx;
+  border-radius: 100%;
+  right: 20rpx;
+  bottom: 130rpx;
+  font-weight: bold;
+}
+
+.menu-button {
+  position: absolute;
+  background: #ffaf2d;
+  color: #fff;
+  width: 50rpx;
+  height: 50rpx;
+  text-align: center;
+  line-height: 50rpx;
+  border-radius: 100%;
+  right: 20rpx;
+  bottom: 50rpx;
+  font-weight: bold;
+}
+
+.menu {
+    position: absolute;
+    height: auto;
+    bottom: 0;
+    right: 0;
+    background: #f1f1f1;
+    box-shadow: 0px -4px 8px 0 rgba(88, 88, 88, 0.3);
+    overflow: scroll;
+}
+
+.menu-container {
+  margin: 10rpx 15rpx 30rpx;
+}
+
+.menu-placeholder{
+  font-size: 25rpx;
+}
+
+.menu-item {
+  padding:7px 15px;
+  position:relative;
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:flex;
+  -webkit-box-align:center;
+  -webkit-align-items:center;
+  align-items:center;
+
+}
+
+.menu-item__hd {
+  position: relative;
+}
+
+.menu-item__bd {
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  flex:1;
+}
+
+.menu-tips {
+  margin: 15rpx;
+  padding: 10rpx 40rpx;
+}
+
+.menu-tips label {
+  color: #888;
+  font-size: 25rpx;
+}
+
+.menu-tips button::after{
+  border: none;
+}
+
+.menu-tips button {
+  display: inline;
+  padding: 15rpx 20rpx;
+  font-size: 25rpx;
+  margin-right: 20rpx;
+  border: 1rpx solid #ffaf2d;
+  color: #ffaf2d;
+}

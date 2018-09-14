@@ -1,0 +1,42 @@
+<!--pages/improve/improve.wxml-->
+<scroll-view>
+    <view class='improve-header' wx:if='{{translation}}'>
+        <view class="improve-title improve-title-font">{{translation.word}}</view>
+        <view class='improve-phonetic'
+              wx:if="{{translation.phonetic}}">
+            <label>/{{translation.phonetic}}/</label>
+        </view>
+
+        <!-- 翻译区域 -->
+        <view wx:if="{{translation.translation}}">
+            <text>{{translation.translation}}</text>
+        </view>
+    </view>
+
+    <view class='improve-tips'>
+        <icon type="info" size="20" color="#ffaf2d"/>
+        <label>点击黄色区域即可修改内容，点击原文还原</label>
+    </view>
+
+
+    <view class='improve-item'>
+        <view class='improve-item-english'>
+            {{original}}
+        </view>
+        <view class='improve-item-chinese'>
+            <textarea style='height: {{height}}'
+                      value="{{nextTrans}}"
+                      bindinput='changeTrans'
+                      maxlength="-1"/>
+        </view>
+        <view class='improve-item-chinese'
+              wx:if="{{prevTrans !== nextTrans}}"
+              bindtap='resetTrans'>
+            <label>{{prevTrans}}</label>
+        </view>
+    </view>
+
+    <view>
+      <button class='submit-improve' bindtap='submitImprove'>提交</button>
+    </view>
+</scroll-view>

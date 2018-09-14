@@ -1,0 +1,78 @@
+/* pages/improve/improve.wxss */
+
+.improve-header {
+    background: #efefef;
+    padding: 30rpx 40rpx;
+    box-shadow: 0px 2px 6px 0 rgba(88, 88, 88, 0.2);
+}
+
+.improve-title-font {
+    font-family: Helvetica;
+}
+
+.improve-title {
+    font-size: 80rpx;
+}
+
+.improve-phonetic {
+    margin-top: 20rpx;
+    font-size: 40rpx;
+    line-height: 40rpx;
+    font-family: "Times New Roman";
+}
+
+.improve-item {
+    margin: 40rpx 45rpx;
+    padding-bottom: 30rpx;
+    border-bottom: 1rpx solid #ddd;
+    font-size: 30rpx;
+}
+
+.improve-item-english {
+  background: #e9e9e9; 
+  padding: 20rpx;
+  overflow-x: hidden;
+  margin-bottom: 20rpx;
+}
+
+.improve-item-chinese {
+  background: #ffdd97;
+  padding: 20rpx;
+}
+
+.improve-item-chinese label {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.improve-item textarea {
+    width: 100%;
+    overflow: auto;
+    font-size: 30rpx;
+    line-height: 50rpx;
+    min-height: 50rpx;
+    overflow-y: hidden;
+}
+
+.submit-improve {
+  margin-bottom: 40rpx;
+  width: 50%;
+  background: #ffaf2d;
+  color: #fff;
+}
+
+.improve-tips {
+  margin: 30rpx 45rpx 0rpx;
+}
+
+.improve-tips icon{
+  vertical-align: middle;
+  margin-right: 10rpx;
+}
+
+.improve-tips label{
+  line-height: 50rpx;
+  vertical-align: middle;
+  font-size: 25rpx;
+  color: #888;
+}

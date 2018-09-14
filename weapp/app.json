@@ -1,0 +1,13 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/logs/logs",
+        "pages/improve/improve"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#ffaf2d",
+        "navigationBarTitleText": "芒果词源助手",
+        "navigationBarTextStyle": "black"
+    }
+}

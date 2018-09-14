@@ -1,0 +1,39 @@
+[core]
+    debug = true
+    data_dir = "../../assets/"
+    [core.data_files]
+        dict = "stardict.json"          # 词典数据
+        etym = "etym.json"              # 词源数据
+        lemma = "lemma.en.txt"          # 词干数据
+        trans = "trans.json"            # 翻译数据
+
+#WEB服务器设置
+[webserver]
+    addr = ":8080"                         #监听地址
+    enable_ssl = false                     #是否使用https, 如果为true, 则必须配置cert和key的路径
+    static_dir = "../../webui/statics/"
+    rpc_addr = "127.0.0.1:5431"           #RPC地址
+    review_addr = ":8081"                   #Review服务地址
+
+# 登陆非对称加密
+[login]
+public_key = "configs/login/public_key.pem"     #login公钥
+private_key = "configs/login/private_key.pem"   #login私钥
+
+#证书设置
+[webserver.certificates]
+    cert = "certs/chaind.pem"            #证书路径
+    key = "certs/domain.etym.key"        #Key路径
+
+# Mysql server config
+[database]
+    host = "172.16.64.135"
+    port = 3306
+    dbname = "etym"
+    username = "root"
+    password = "123456"
+    args = "charset=utf8"
+    buf_size = 10
+    max_idle_conns = 20
+    max_open_conns = 15
+    show_sql = true

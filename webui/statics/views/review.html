@@ -1,0 +1,46 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/statics/css/review.css">
+    <link href="https://cdn.bootcss.com/bulma/0.7.1/css/bulma.css" rel="stylesheet">
+</head>
+<body>
+<div class="section">
+    <div class="container" id="review-panel">
+        <h1 class="title is-1" v-if="pendingReview <= 0">没有等待审阅的翻译</h1>
+        <h1 class="title is-1" v-if="pendingReview > 0">等待审阅{{pendingReview}}条</h1>
+        <div class="tile is-ancestor" v-if="pendingReview > 0">
+            <div class="tile is-7 is-vertical is-parent">
+                <div class="tile is-child box">
+                    <p class="title">原文</p>
+                    <p>{{original}}</p>
+                </div>
+                <div class="tile is-child box">
+                    <p class="title">参考翻译</p>
+                    <p>{{prevTrans}}</p>
+                </div>
+            </div>
+            <div class="tile is-parent is-vertical">
+                <div class="tile is-child box">
+                    <p class="title">{{word}}</p>
+                    <p>{{nextTrans}}</p>
+                    <button class="button is-primary is-rounded"
+                            style="margin-top: 20px"
+                            @click="submit">提交</button>
+
+                    <button class="button is-primary is-rounded"
+                            style="margin-top: 20px"
+                            @click="finalSubmit">最终定稿</button>
+
+                    <button class="button is-primary is-rounded"
+                            style="margin-top: 20px"
+                            @click="reject">拒绝</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script src="/statics/js/review.js"></script>
+</html>

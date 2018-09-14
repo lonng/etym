@@ -1,0 +1,183 @@
+<!--pages/index/rand.index.js.wxml-->
+<!-- BEGIN:词源卡片 -->
+<view class='etym-search-container'>
+    <view class='etym-search-bar'>
+        <!-- begin:input -->
+        <input bindinput='searchTextInput'
+               bindfocus='searchFocus'
+               bindconfirm='searchTextInput'
+               placeholder='输入你想查询的单词'
+               bindblur='searchBlur'
+               value='{{searchText}}'
+               class='search-input'>
+        <view class='search-icon'>
+            <icon type='{{searchText === "" ? "search" : "cancel" }}' size='18' color='#ffaf2d' bindtap='clearSearch'></icon>
+        </view>
+        </input>
+        <!-- end:input -->
+
+    </view>
+    <view class='etym-search-history' wx:if='{{!!searchList && searchList.length > 0}}'>
+        <view class="weui-loadmore" wx:if="{{isSearching}}">
+            <view class="weui-loading"></view>
+            <view class="weui-loadmore__tips">正在加载</view>
+        </view>
+        <view wx:for="{{searchList}}"
+              wx:for-item="searchItem"
+              wx:for-index="refIdx"
+              class='etym-search-item'
+              data-word='{{searchItem.word}}'
+              bindtap='searchDetail'>
+            <label class="etym-search-item-word">{{searchItem.word}}</label>
+            <label class='etym-search-item-translation'>{{searchItem.translation}}</label>
+        </view>
+    </view>
+</view>
+
+<scroll-view scroll-y="true"
+             class='etym-card-container'
+             bindtap='etymContainerFocus'
+             enable-back-to-top='true'
+             scroll-with-animation='true'
+             scroll-top="{{scrollTop}}">
+    <!-- begin:etym-card-header -->
+    <view class='etym-card-header' wx:if='{{currentEtym}}'>
+        <view class="etym-title etym-title-font">{{currentEtym.trans.word}}</view>
+        <view class='etym-phonetic'
+              wx:if="{{currentEtym.trans.phonetic}}"
+              data-url='https://ssl.gstatic.com/dictionary/static/sounds/oxford/{{currentEtym.word}}--_us_1.mp3'
+              bindtap='playAudio'>
+            <image class='etym-phonetic-audio' src="assets/speaker.png"></image>
+            <label>/{{currentEtym.trans.phonetic}}/</label>
+        </view>
+
+        <!-- 翻译区域 -->
+        <view wx:if="{{currentEtym.trans}}">
+            <text class='etym-content'>{{currentEtym.trans.translation}}</text>
+        </view>
+    </view>
+    <!-- end:etym-card-header -->
+
+    <!-- BEGIN:词源原文 -->
+    <view wx:for="{{currentEtym.etym}}" wx:for-index="idx" wx:for-item="etymInfo" class="etym-info">
+        <view class="etym-info-header">
+            <label class="etym-title2 etym-title-font">{{etymInfo.name}}</label>
+        </view>
+
+        <view class='etym-info-content'>
+            <view data-etymindex='{{idx}}'
+                  wx:if="{{!etymInfo.final}}"
+                  bindtap='switchLang'>
+                <label wx:if='{{etymInfo.etymCN && etymInfo.etymCN.length > 0}}' class='etym-switch-lang'>中⇄英</label>
+                <label wx:if='{{true || !etymInfo.showCN}}'>
+                    {{etymInfo.etym}}
+                </label>
+            </view>
+
+            <view wx:if='{{etymInfo.final||etymInfo.showCN}}'>
+                <label wx:if="{{!etymInfo.final}}"
+                       data-iscn="{{etymInfo.showCN}}"
+                       data-final="{{etymInfo.final}}"
+                       data-trans="{{currentEtym.trans}}"
+                       data-etym="{{etymInfo.etym}}"
+                       data-etymcn="{{etymInfo.etymCN}}"
+                       bindtap='impoveTransaltion'
+                       data-word='{{etymInfo.name}}'
+                       class='etym-info-impove'>纠错🖋</label>
+                <label>
+                    {{etymInfo.etymCN}}
+                </label>
+            </view>
+        </view>
+    </view>
+    <!-- END:词源原文 -->
+
+    <!--BEGIN:FOREIGN-->
+    <view wx:if="{{currentEtym.related}}" class='etym-related'>
+        <!--begin:etym-foreign-->
+        <view class='etym-foreign'>
+            <view wx:for="{{currentEtym.related}}"
+                  wx:for-index="refIdx"
+                  wx:for-item="related"
+                  class='etym-related-container {{refIdx % 2 == 0 ? "etym-related-white" : "etym-related-grey"}}'>
+                <view>
+                    <label class='etym-related-word'
+                           data-word='{{related.word}}'
+                           bindtap='wordDetail'>{{related.word}}</label>
+                    <label class='etym-related-phonetic' wx:if='{{related.phonetic}}'>/{{related.phonetic}}/</label>
+                </view>
+                <view class='etym-related-translation'>{{related.translation}}</view>
+            </view>
+        </view>
+        <!--end:etym-foreign-->
+    </view>
+    <!--END:FOREIGN-->
+
+    <!--BEGIN:REF-->
+    <view wx:for="{{currentEtym.ref}}" wx:for-item="ref" class='etym-related'>
+        <!--begin:etym-ref-->
+        <view class='etym-ref'>
+            <!-- BEGIN:REF-HEADER -->
+            <view class='etym-ref-title'>
+                <view>
+                    <label class='etym-ref-title-word'
+                           data-word='{{ref.word}}'
+                           bindtap='wordDetail'>
+                        {{ref.word}}
+                    </label>
+                    <label wx:if='{{ref.dict.phonetic}}' class='etym-ref-title-phonetic'>/{{ref.dict.phonetic}}/</label>
+                </view>
+                <text>{{ref.dict.translation}}</text>
+            </view>
+            <!-- END:REF-HEADER -->
+
+            <view wx:if="{{ref.related.length > 0}}" class='etym-related-container etym-related-white}}'>
+                <view class='etym-related-counter'> ⇒ 相关词汇: {{ref.related.length}}个</view>
+            </view>
+
+            <view wx:for="{{ref.related}}"
+                  wx:for-index="refIdx"
+                  wx:for-item="related"
+                  class='etym-related-container {{refIdx % 2 == 1 ? "etym-related-white" : "etym-related-grey"}}'>
+                <view>
+                    <label class='etym-related-word'
+                           data-word='{{related.word}}'
+                           bindtap='wordDetail'>{{related.word}}</label>
+                    <label class='etym-related-phonetic' wx:if='{{related.phonetic}}'>/{{related.phonetic}}/</label>
+                </view>
+                <view class='etym-related-translation'>{{related.translation}}</view>
+            </view>
+        </view>
+        <!--eng:etym-ref-->
+
+    </view>
+    <!--END:REF-->
+</scroll-view>
+
+<!--菜单-->
+<scroll-view class='menu' wx:if='{{isShowMenu}}'>
+    <view class='menu-tips'>
+      <label>自定义随机单词选择范围, 如果全部取消勾选, 默认从COCA词单中随机选择单词 (Tips: 点击上方空白处即可关闭菜单栏)</label>
+    </view>
+
+    <checkbox-group bindchange="checkboxChange" class="menu-container">
+        <view class="weui-flex" wx:for="{{menulist}}" wx:for-item="menurow">
+            <label class="weui-flex__item menu-item weui-check__label" wx:for="{{menurow}}" wx:for-item="item" wx:if="{{item.desc}}">
+                <checkbox class="weui-check" value="{{item.value}}" checked="{{item.checked}}"/>
+
+                <view class="menu-item__hd weui-check__hd_in-checkbox">
+                    <icon class="weui-icon-checkbox_circle" type="circle" size="23" color='#ffaf2d' wx:if="{{!item.checked}}"></icon>
+                    <icon class="weui-icon-checkbox_success" type="success" size="23" color='#ffaf2d' wx:if="{{item.checked}}"></icon>
+                </view>
+                <view class="menu-item__bd">{{item.desc}}</view>
+            </label>
+        </view>
+    </checkbox-group>
+    
+    <view class='menu-tips'>
+      <button open-type='share'>分享词源</button>
+      <button open-type='contact'>用户反馈</button>
+    </view>
+</scroll-view>
+<label class='refresh-button' bindtap='refresh' wx:if="{{isRandMode && !isShowMenu}}">↺</label>
+<label class='menu-button' wx:if='{{ !isShowMenu && !!menulist && menulist.length > 0}}' bindtap='switchMenu'>≡</label>
