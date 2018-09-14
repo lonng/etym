@@ -2,7 +2,7 @@
     debug = true
     data_dir = "../../assets/"
     [core.data_files]
-        dict = "stardict.json"          # 词典数据
+        dict = "ecdict.json"          # 词典数据
         etym = "etym.json"              # 词源数据
         lemma = "lemma.en.txt"          # 词干数据
         trans = "trans.json"            # 翻译数据

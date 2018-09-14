@@ -15,7 +15,19 @@ import (
 	"strings"
 )
 
+type Options struct {
+	EtymFile  string
+	DictFile  string
+	LemmaFile string
+}
+
 var (
+	DefaultOptions = &Options{
+		EtymFile:  "etym.json",
+		DictFile:  "ecdict.json",
+		LemmaFile: "lemma.en.txt",
+	}
+
 	initOnce sync.Once
 
 	// 索引器, 负责索引, 所有以单词作为key的地方, 都需要strings.ToLower处理
@@ -34,7 +46,11 @@ func init() {
 	indexes.searchIndex = make(map[byte]map[byte][]*protocol.ResDictWord)
 }
 
-func Load(dataDir string) {
+func Load(dataDir string, options *Options) {
+	if options == nil {
+		options = DefaultOptions
+	}
+
 	var load = func() {
 		var err error
 		dataDir, err = filepath.Abs(dataDir)
@@ -44,12 +60,12 @@ func Load(dataDir string) {
 
 		log.Infof("Memdb load data from: %s", dataDir)
 
-		var etymPath = filepath.Join(dataDir, "etym.json")
-		var starPath = filepath.Join(dataDir, "stardict.json")
-		var lammaPath = filepath.Join(dataDir, "lemma.en.txt")
+		var etymPath = filepath.Join(dataDir, options.EtymFile)
+		var dictPath = filepath.Join(dataDir, options.DictFile)
+		var lammaPath = filepath.Join(dataDir, options.LemmaFile)
 
 		log.Infof("Etymology file path: %s", etymPath)
-		log.Infof("Dictionary file path: %s", starPath)
+		log.Infof("Dictionary file path: %s", dictPath)
 		log.Infof("Lemma file path: %s", lammaPath)
 
 		lemmaFile, err := ioutil.ReadFile(lammaPath)
@@ -63,7 +79,7 @@ func Load(dataDir string) {
 		}
 		defer etymFile.Close()
 
-		starFile, err := os.OpenFile(starPath, os.O_RDONLY, os.ModePerm)
+		starFile, err := os.OpenFile(dictPath, os.O_RDONLY, os.ModePerm)
 		if err != nil {
 			panic(err)
 		}

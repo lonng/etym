@@ -64,9 +64,9 @@ func save() {
 	dirtyCount = 0
 }
 
-func Load(dataDir string) {
+func Load(dataDir string, transFile string) {
 	var load = func() {
-		var transPath = filepath.Join(dataDir, "trans.json")
+		var transPath = filepath.Join(dataDir, transFile)
 		log.Infof("Translation file path: %s", transPath)
 
 		transFile, err := os.OpenFile(transPath, os.O_RDONLY, os.ModePerm)

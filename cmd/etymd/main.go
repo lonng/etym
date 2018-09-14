@@ -68,10 +68,15 @@ func main() {
 		panic(fmt.Errorf("data directory not found: %s", dataDir))
 	}
 
+	options := &memdb.Options{
+		EtymFile:  viper.GetString("core.data_files.etym"),
+		DictFile:  viper.GetString("core.data_files.dict"),
+		LemmaFile: viper.GetString("core.data_files.lemma"),
+	}
 	// strict order
-	syncer.Load(dataDir)   // initialize syncer
-	memdb.Load(dataDir)    // initialize memory database
-	wordlist.Load(dataDir) // initialize wordlist
+	syncer.Load(dataDir, viper.GetString("core.data_files.trans")) // initialize syncer
+	memdb.Load(dataDir, options)                                   // initialize memory database
+	wordlist.Load(dataDir)                                         // initialize wordlist
 
 	log.Infof("Enable SSL: %v", enableSSL)
 	log.Infof("Listen address: %v, rpc: %s", addr, rpcAddr)
