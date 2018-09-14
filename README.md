@@ -28,3 +28,8 @@ sh build/unpack.sh
 
 ![screenshot](./screenshot/ex.jpg)
 ![screenshot](./screenshot/geo.jpg)
+
+### 支持作者
+
+![screenshot](./screenshot/r.jpg)
+
