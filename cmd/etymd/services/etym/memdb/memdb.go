@@ -229,6 +229,10 @@ func FindDictItem(word string) *protocol.ResDictWord {
 	return indexes.dictionary[strings.ToLower(word)]
 }
 
+func FindEtymology(word string)  []*model.Word {
+	return indexes.etymology[strings.ToLower(word)]
+}
+
 func HasEtymology(word string) bool {
 	_, found := indexes.etymology[strings.ToLower(word)]
 	return found
