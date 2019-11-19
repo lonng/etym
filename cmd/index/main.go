@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"etym/pkg/db/model"
 	"fmt"
@@ -72,6 +73,126 @@ func generateIndex(wordlist []string, outpath string) {
 		Word     string
 		Ref      map[string]struct{}
 		Foreign  map[string]struct{}
+		Index    int
+	}
+
+	var wordsinfo = map[string]*RefInfo{}
+	for _, word := range wordlist {
+		if len(word) < 1 || /* skip phrase */ strings.Index(word, " ") >= 0 {
+			continue
+		}
+		etym := memdb.FindEtymology(word)
+		dict := memdb.FindDictItem(word)
+		if /*etym == nil || len(etym) == || 0*/ dict == nil {
+			continue
+		}
+
+		var uniqueRef = map[string]struct{}{}
+		var uniqueFor = map[string]struct{}{}
+		for _, e := range etym {
+			for _, ref := range e.Ref {
+				uniqueRef[ref] = struct{}{}
+			}
+			for _, ref := range e.Foreign {
+				uniqueFor[ref] = struct{}{}
+			}
+		}
+		info := &RefInfo{
+			Word:     word,
+			Trans:    strings.Replace(dict.Translation, "\\n", "; ", -1),
+			Phonetic: dict.Phonetic,
+			Ref:      uniqueRef,
+			Foreign:  uniqueFor,
+		}
+		wordsinfo[word] = info
+	}
+
+	fmt.Println("wordsinfo", len(wordsinfo))
+	var refsinfo = map[string][]string{}
+	var sortWords []string
+	for _, word := range wordsinfo {
+		sortWords = append(sortWords, word.Word)
+		var ref = word.Ref
+		for r := range ref {
+			refsinfo[r] = append(refsinfo[r], word.Word)
+		}
+	}
+
+	sort.Strings(sortWords)
+	for i, w := range sortWords {
+		wordsinfo[w].Index = i
+	}
+
+	type Item struct {
+		Word     string `json:"word"`
+		Phonetic string `json:"phonetic"`
+		Trans    string `json:"trans"`
+		Derives  []int  `json:"derives,omitemtpy"`
+		Audio    string `json:"-"`
+	}
+
+	var results []*Item
+	for _, w := range sortWords {
+		word := wordsinfo[w]
+		refWords := map[string]struct{}{}
+		for foreign := range word.Foreign {
+			refWords[foreign] = struct{}{}
+		}
+		for ref := range word.Ref {
+			refInfo := refsinfo[ref]
+			for _, w := range refInfo {
+				refWords[w] = struct{}{}
+			}
+		}
+
+		var derives []int
+		for ref := range refWords {
+			if ref == word.Word {
+				continue
+			}
+			inner := wordsinfo[ref]
+			if inner == nil {
+				continue
+			}
+			derives = append(derives, inner.Index)
+		}
+		var audio string
+		audioPath := filepath.Join("./audio", fmt.Sprintf("%s.ogg", word.Word))
+		if content, err := ioutil.ReadFile(audioPath); err == nil {
+			audio = base64.StdEncoding.EncodeToString(content)
+		}
+		results = append(results, &Item{
+			Word:     word.Word,
+			Phonetic: word.Phonetic,
+			Trans:    word.Trans,
+			Derives:  derives,
+			Audio:    audio,
+		})
+	}
+
+	var outbuf = bytes.NewBuffer(nil)
+	json.NewEncoder(outbuf).Encode(results)
+	// var dstbuf = bytes.NewBuffer(nil)
+	//json.Indent(dstbuf, outbuf.Bytes(), "", "\t")
+
+	if err := ioutil.WriteFile(outpath, outbuf.Bytes(), os.ModePerm); err != nil {
+		panic(err)
+	}
+}
+
+// 单词的翻译和词源, 词源包括词源原文和交叉引用
+func generateSimpleMD(wordlist []string, outpath string) {
+	var words = map[string]struct{}{}
+	for _, word := range wordlist {
+		words[word] = struct{}{}
+	}
+
+	type RefInfo struct {
+		Trans    string
+		Phonetic string
+		Word     string
+		Ref      map[string]struct{}
+		Foreign  map[string]struct{}
 	}
 
 	var wordsinfo = map[string]*RefInfo{}
@@ -100,7 +221,7 @@ func generateIndex(wordlist []string, outpath string) {
 			Trans:    dict.Translation,
 			Phonetic: dict.Phonetic,
 			Ref:      uniqueRef,
-			Foreign:  uniqueFor,
+			//Foreign:  uniqueFor,
 		}
 		wordsinfo[word] = info
 	}
@@ -276,8 +397,13 @@ func downloadAudio(wordlist []string, outpath string) {
 		go func() {
 			defer wg.Done()
 			for word := range ch {
-				path := fmt.Sprintf("%s.ogg", word)
+				path := filepath.Join(outpath, fmt.Sprintf("%s.ogg", word))
+				if _, err := os.Stat(path); err == nil {
+					atomic.AddInt32(&succ, 1)
+					continue
+				}
 				url := fmt.Sprintf("http://dict.youdao.com/dictvoice?audio=%s&type=2", word)
+				fmt.Println("downloading", url)
 				resp, err := http.Get(url)
 				if err != nil {
 					continue
@@ -286,7 +412,7 @@ func downloadAudio(wordlist []string, outpath string) {
 				if err != nil {
 					continue
 				}
-				if err := ioutil.WriteFile(filepath.Join(outpath, path), bytes, os.ModePerm); err != nil {
+				if err := ioutil.WriteFile(path, bytes, os.ModePerm); err != nil {
 					continue
 				}
 				atomic.AddInt32(&succ, 1)
@@ -309,10 +435,10 @@ func main() {
 	}
 	words := strings.Split(string(content), "\n")
 	for i := range words {
-		words[i] = strings.TrimSpace(words[i])
+		words[i] = strings.ToLower(strings.TrimSpace(words[i]))
 	}
 	// generateJSON(words, "./unique.json")
 	// generateMD(words, "./unique.md")
-	// generateIndex(words, "./unique.index")
-	downloadAudio(words, "./audio")
+	generateIndex(words, "./unique.index")
+	//downloadAudio(words, "./audio")
 }
