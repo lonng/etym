@@ -6,9 +6,13 @@ import (
 	"etym/pkg/db/model"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
+	"sync/atomic"
 
 	"etym/cmd/etymd/services/etym/memdb"
 )
@@ -55,7 +59,6 @@ func generateJSON(wordlist []string, outpath string) {
 	}
 }
 
-
 // 单词的翻译和词源, 词源包括词源原文和交叉引用
 func generateIndex(wordlist []string, outpath string) {
 	var words = map[string]struct{}{}
@@ -97,7 +100,7 @@ func generateIndex(wordlist []string, outpath string) {
 			Trans:    dict.Translation,
 			Phonetic: dict.Phonetic,
 			Ref:      uniqueRef,
-			Foreign: uniqueFor,
+			Foreign:  uniqueFor,
 		}
 		wordsinfo[word] = info
 	}
@@ -117,7 +120,7 @@ func generateIndex(wordlist []string, outpath string) {
 		for foreign := range word.Foreign {
 			refWords[foreign] = struct{}{}
 		}
-		for ref := range  word.Ref {
+		for ref := range word.Ref {
 			refInfo := refsinfo[ref]
 			for _, w := range refInfo {
 				refWords[w] = struct{}{}
@@ -251,6 +254,54 @@ func generateMD(wordlist []string, outpath string) {
 	}
 }
 
+func downloadAudio(wordlist []string, outpath string) {
+	var words = map[string]struct{}{}
+	for _, word := range wordlist {
+		if len(word) < 1 || /* skip phrase */ strings.Index(word, " ") >= 0 {
+			continue
+		}
+		dict := memdb.FindDictItem(word)
+		if /*etym == nil || len(etym) == || 0*/ dict == nil {
+			continue
+		}
+		words[word] = struct{}{}
+	}
+
+	var succ int32
+
+	ch := make(chan string, 100)
+	wg := sync.WaitGroup{}
+	for i := 0; i < 100; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for word := range ch {
+				path := fmt.Sprintf("%s.ogg", word)
+				url := fmt.Sprintf("http://dict.youdao.com/dictvoice?audio=%s&type=2", word)
+				resp, err := http.Get(url)
+				if err != nil {
+					continue
+				}
+				bytes, err := ioutil.ReadAll(resp.Body)
+				if err != nil {
+					continue
+				}
+				if err := ioutil.WriteFile(filepath.Join(outpath, path), bytes, os.ModePerm); err != nil {
+					continue
+				}
+				atomic.AddInt32(&succ, 1)
+			}
+		}()
+	}
+
+	for word := range words {
+		ch <- word
+	}
+	close(ch)
+	wg.Wait()
+	fmt.Println("Total", len(words), "Succ", succ)
+}
+
 func main() {
 	content, err := ioutil.ReadFile("/Users/lonng/devel/opensource/vocabulary/unique.txt")
 	if err != nil {
@@ -262,5 +313,6 @@ func main() {
 	}
 	// generateJSON(words, "./unique.json")
 	// generateMD(words, "./unique.md")
-	generateIndex(words, "./unique.index")
+	// generateIndex(words, "./unique.index")
+	downloadAudio(words, "./audio")
 }
