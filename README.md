@@ -28,7 +28,3 @@ sh build/unpack.sh
 
 <img src="./screenshot/geo.jpg" width="300"/>
 <img src="./screenshot/ex.jpg" width="300"/>
-
-### 支持作者
-
-<img src="./screenshot/r.jpg" width="300"/>
